@@ -1,0 +1,38 @@
+---
+const isLoggedIn = false; // şimdilik false, sonra auth gelince gerçek olacak
+---
+
+<header class="border-b border-slate-200 bg-white/80 backdrop-blur">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+    {/* Logo */}
+    <a href="/" class="flex items-center gap-2 font-semibold text-lg">
+      <span class="inline-flex h-8 w-8 items-center justify-center rounded-md bg-blue-600 text-white">
+        ✦
+      </span>
+      <span>The Sumeyye Journal</span>
+    </a>
+
+    {/* Links */}
+    <nav class="flex items-center gap-6 text-sm">
+      <a href="/" class="hover:text-blue-600">Home</a>
+      <a href="/posts" class="hover:text-blue-600">Posts</a>
+
+      {isLoggedIn ? (
+        <>
+          <a href="/account" class="hover:text-blue-600">Profile</a>
+          <a
+            href="/posts/new"
+            class="rounded-md bg-blue-600 px-3 py-2 text-white hover:bg-blue-700"
+          >
+            + New Post
+          </a>
+        </>
+      ) : (
+        <>
+          <a href="/register" class="hover:text-blue-600">Register</a>
+          <a href="/login" class="hover:text-blue-600">Login</a>
+        </>
+      )}
+    </nav>
+  </div>
+</header>

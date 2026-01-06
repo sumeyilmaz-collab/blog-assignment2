@@ -1,0 +1,115 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import { posts } from "../../data/posts";
+
+// ✅ Astro dynamic routes için zorunlu
+export function getStaticPaths() {
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+  }));
+}
+
+// URL’den slug’ı al
+const { slug } = Astro.params;
+
+// slug’a göre post bul
+const post = posts.find((p) => p.slug === slug);
+
+if (!post) {
+  return Astro.redirect("/posts");
+}
+
+// Mock comments
+const comments = [
+  {
+    name: "Alex Chen",
+    time: "2 hours ago",
+    text: "Great article! I've been experimenting with Islands Architecture recently and the performance gains are noticeable.",
+  },
+  {
+    name: "Marcus Johnson",
+    time: "5 hours ago",
+    text: "Totally agree about the security aspect. Moving away from a monolithic CMS was the best decision for our workflow.",
+  },
+];
+---
+
+<MainLayout title={`${post.title} | The Sumeyye Journal`} fullWidth={false}>
+  <section class="py-14 max-w-4xl mx-auto px-6">
+
+    <!-- Category -->
+    <p class="text-blue-600 text-sm font-semibold uppercase tracking-wide">
+      {post.category}
+    </p>
+
+    <!-- Title -->
+    <h1 class="mt-3 text-5xl font-extrabold text-slate-900 leading-tight">
+      {post.title}
+    </h1>
+
+    <!-- Meta -->
+    <div class="mt-4 flex items-center gap-3 text-sm text-slate-500">
+      <span class="font-semibold text-slate-700">{post.author}</span>
+      <span>•</span>
+      <span>{post.date}</span>
+    </div>
+
+    <!-- Image -->
+    <div class="mt-8 overflow-hidden rounded-xl border border-slate-200 shadow-sm">
+      <img src={post.image} alt={post.title} class="w-full h-[420px] object-cover" />
+    </div>
+
+    <!-- Content -->
+    <article class="mt-10 prose prose-slate max-w-none prose-h2:text-2xl prose-h2:font-bold prose-h2:mt-10">
+      <Fragment set:html={post.content} />
+    </article>
+
+    <hr class="my-12 border-slate-200" />
+
+    <!-- COMMENTS SECTION -->
+    <section>
+      <h2 class="text-2xl font-bold text-slate-900">Discussion</h2>
+
+      <!-- Comment Form -->
+      <div class="mt-6 bg-white border border-slate-200 rounded-xl shadow-sm p-6">
+        <textarea
+          placeholder="Write a thoughtful comment..."
+          class="w-full h-32 border border-slate-200 rounded-lg p-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+        ></textarea>
+
+        <div class="flex justify-end mt-4">
+          <button class="px-6 py-2 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-700 transition">
+            Post Comment
+          </button>
+        </div>
+      </div>
+
+      <!-- Comment List -->
+      <div class="mt-10 space-y-8">
+        {comments.map((c) => (
+          <div class="flex gap-4">
+            <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-600">
+              {c.name[0]}
+            </div>
+
+            <div class="flex-1">
+              <div class="flex items-center gap-3">
+                <p class="font-semibold text-slate-900">{c.name}</p>
+                <p class="text-xs text-slate-400">{c.time}</p>
+              </div>
+              <p class="mt-2 text-sm text-slate-600 leading-relaxed">{c.text}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Back Link -->
+      <div class="mt-10">
+        <a href="/posts" class="text-blue-600 font-medium hover:underline">
+          ← Back to Posts
+        </a>
+      </div>
+    </section>
+
+  </section>
+</MainLayout>

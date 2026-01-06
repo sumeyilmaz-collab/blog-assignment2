@@ -1,0 +1,138 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+
+const user = {
+  name: "Alex Chen",
+  email: "alex.chen@example.com",
+};
+
+const myPosts = [];
+---
+
+<MainLayout title="Account | The Sumeyye Journal" fullWidth={true}>
+  <section class="bg-[#f5f4f0] py-16">
+    <div class="max-w-5xl mx-auto px-6">
+
+      <!-- PAGE HEADER -->
+      <div class="mb-14">
+        <h1 class="text-4xl font-extrabold text-slate-900">My Account</h1>
+        <p class="mt-3 text-slate-600 text-lg">
+          Manage your profile information and account settings.
+        </p>
+      </div>
+
+      <!-- TOP GRID -->
+      <div class="grid gap-10 md:grid-cols-2 mb-14">
+
+        <!-- ACCOUNT INFO -->
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-10">
+          <h2 class="text-xl font-bold text-slate-900 mb-6">
+            Account Info
+          </h2>
+
+          <div class="space-y-1">
+            <p class="text-lg font-semibold text-slate-900">{user.name}</p>
+            <p class="text-slate-600">{user.email}</p>
+          </div>
+
+          <p class="mt-8 text-sm text-slate-500 leading-relaxed">
+            Profile editing will be available once database integration is added.
+          </p>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-10">
+          <h2 class="text-xl font-bold text-slate-900 mb-6">
+            Actions
+          </h2>
+
+          <div class="flex flex-col gap-4">
+            <a
+              href="/create-post"
+              class="w-full text-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition shadow"
+            >
+              Create New Post
+            </a>
+
+            <button
+              class="w-full px-6 py-3 border border-slate-300 text-slate-800 font-semibold rounded-lg hover:bg-slate-100 transition"
+            >
+              Logout
+            </button>
+
+            <button
+              class="w-full px-6 py-3 border border-red-200 text-red-600 font-semibold rounded-lg hover:bg-red-50 transition"
+            >
+              Delete Account
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- MY POSTS -->
+      <div>
+        <h2 class="text-2xl font-bold text-slate-900 mb-8">My Posts</h2>
+
+        {myPosts.length === 0 ? (
+          <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-10">
+            <div class="min-h-[260px] flex flex-col items-center justify-center text-center border-2 border-dashed border-slate-300 rounded-xl px-6 py-12">
+              <h3 class="text-xl font-bold text-slate-900">No posts yet</h3>
+              <p class="mt-2 text-slate-600">
+                You haven’t published any posts yet.
+              </p>
+
+              <a
+                href="/create-post"
+                class="mt-6 px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition shadow"
+              >
+                Create your first post
+              </a>
+            </div>
+          </div>
+        ) : (
+          <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-slate-50 text-slate-600">
+                <tr>
+                  <th class="px-6 py-4 font-semibold">Title</th>
+                  <th class="px-6 py-4 font-semibold">Date</th>
+                  <th class="px-6 py-4 font-semibold">Status</th>
+                  <th class="px-6 py-4 font-semibold">Actions</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {myPosts.map((post) => (
+                  <tr class="border-t border-slate-200">
+                    <td class="px-6 py-4">{post.title}</td>
+                    <td class="px-6 py-4">{post.date}</td>
+                    <td class="px-6 py-4">
+                      <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                        Published
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 flex gap-3">
+                      <a
+                        href={`/posts/${post.slug}`}
+                        class="px-4 py-2 text-xs font-semibold rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition"
+                      >
+                        Edit
+                      </a>
+                      <button
+                        class="px-4 py-2 text-xs font-semibold rounded-md bg-red-100 text-red-700 hover:bg-red-200 transition"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+    </div>
+  </section>
+</MainLayout>

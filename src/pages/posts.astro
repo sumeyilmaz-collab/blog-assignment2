@@ -2,33 +2,36 @@
 import MainLayout from "../layouts/MainLayout.astro";
 import { posts } from "../data/posts";
 
-// newest 5 posts
-const latestPosts = [...posts]
-  .sort((a, b) => new Date(b.dateISO) - new Date(a.dateISO))
-  .slice(0, 5);
+const categories = ["All", "Adventure", "Travel", "Fashion", "Technology", "Design"];
 ---
 
-<MainLayout title="Home | The Sumeyye Journal" fullWidth={true}>
+<MainLayout title="Posts | The Sumeyye Journal" fullWidth={true}>
   <!-- HERO -->
-  <section class="w-full bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950 py-24 text-center text-white">
+  <section class="w-full bg-gradient-to-r from-slate-950 via-slate-900 to-emerald-950 py-24 text-center text-white">
     <div class="max-w-5xl mx-auto px-6">
-      <h1 class="text-5xl font-bold tracking-tight">Thoughts, stories, and ideas.</h1>
+      <h1 class="text-5xl font-bold tracking-tight">Posts</h1>
       <p class="mt-4 text-lg text-slate-300 max-w-2xl mx-auto">
         Explore the universe of Web, design and technology through articles.
       </p>
-      <a href="/posts" class="inline-block mt-8 px-6 py-3 rounded-md bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 transition">
-        Read Articles
-      </a>
     </div>
   </section>
 
-  <!-- LATEST POSTS -->
+  <!-- CONTENT -->
   <section class="bg-[#fbf8f3] py-14">
     <div class="max-w-6xl mx-auto px-6">
-      <h2 class="text-2xl font-bold text-slate-900 mb-10">Latest Posts</h2>
+      
+      <!-- CATEGORY FILTER -->
+      <div class="flex gap-6 text-sm font-medium text-slate-600 mb-10">
+        {categories.map((cat) => (
+          <button class={`hover:text-blue-600 ${cat === "All" ? "text-blue-600 font-semibold" : ""}`}>
+            {cat}
+          </button>
+        ))}
+      </div>
 
-      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-2">
-        {latestPosts.map((post) => (
+      <!-- POSTS GRID -->
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {posts.map((post) => (
           <a
             href={`/posts/${post.slug}`}
             class="group bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-lg transition overflow-hidden flex flex-col h-full"
@@ -63,6 +66,14 @@ const latestPosts = [...posts]
           </a>
         ))}
       </div>
+
+      <!-- BUTTON -->
+      <div class="flex justify-center mt-14">
+        <button class="px-8 py-3 rounded-md bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 transition">
+          View All Post
+        </button>
+      </div>
+
     </div>
   </section>
 </MainLayout>

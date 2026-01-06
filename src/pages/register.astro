@@ -1,0 +1,71 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+---
+
+<MainLayout title="Register | The Sumeyye Journal" fullWidth={true}>
+  <main class="min-h-[80vh] bg-slate-100 flex items-center justify-center px-6 py-16">
+   <div class="w-full max-w-md bg-white rounded-xl shadow-md border border-slate-200 p-10">
+      <h1 class="text-3xl font-bold text-center">Create your account</h1>
+      <p class="text-center text-slate-500 mt-2">
+        Join the Sum journal community today.
+      </p>
+
+      <form class="mt-8 space-y-5">
+        <div>
+          <label class="block text-sm font-medium text-slate-700">Full Name</label>
+          <input
+            type="text"
+            placeholder="Jane Doe"
+            class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-700">Email address</label>
+          <input
+            type="email"
+            placeholder="jane@example.com"
+            class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-700">Password</label>
+          <input
+            type="password"
+            placeholder="••••••••"
+            class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-700">Confirm Password</label>
+          <input
+            type="password"
+            placeholder="••••••••"
+            class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <label class="flex items-center gap-2 text-sm text-slate-600">
+          <input type="checkbox" class="h-4 w-4 rounded border-slate-300" />
+          I agree to the
+          <a href="#" class="text-blue-600 hover:underline">Terms</a> and
+          <a href="#" class="text-blue-600 hover:underline">Privacy Policy</a>
+        </label>
+
+        <button
+          type="submit"
+          class="w-full rounded-lg bg-blue-600 py-3 text-white font-medium hover:bg-blue-700 transition"
+        >
+          Register
+        </button>
+
+        <p class="text-center text-sm text-slate-500">
+          Already have an account?
+          <a href="/login" class="text-blue-600 hover:underline">Login</a>
+        </p>
+      </form>
+    </div>
+  </main>
+</MainLayout>
