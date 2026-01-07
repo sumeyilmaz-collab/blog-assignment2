@@ -4,36 +4,29 @@ import { supabase } from "../lib/supabaseClient";
 
 export const prerender = false;
 
-let message = "";
 let error = "";
+let message = "";
 
+// ✅ Login işlemi
 if (Astro.request.method === "POST") {
-  try {
-    const formData = await Astro.request.clone().formData();
+  const formData = await Astro.request.clone().formData();
 
-    const email = formData.get("email")?.toString().trim();
-    const password = formData.get("password")?.toString().trim();
+  const email = formData.get("email")?.toString().trim();
+  const password = formData.get("password")?.toString();
 
-    if (!email || !password) {
-      error = "Please fill in all fields.";
+  if (!email || !password) {
+    error = "Please fill in all fields.";
+  } else {
+    const { data, error: loginError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (loginError) {
+      error = loginError.message;
     } else {
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (signInError) {
-        error = signInError.message;
-      } else {
-        // ✅ 로그인 성공 → cookie kaydet
-        Astro.cookies.set("loggedIn", "true", { path: "/" });
-
-        // ✅ Account sayfasına yönlendir
-        return Astro.redirect("/account");
-      }
+      return Astro.redirect("/account");
     }
-  } catch (e) {
-    error = "Something went wrong. Please try again.";
   }
 }
 ---
@@ -52,20 +45,14 @@ if (Astro.request.method === "POST") {
         </p>
       )}
 
-      {message && (
-        <p class="mt-6 rounded-lg bg-green-100 px-4 py-3 text-sm text-green-700">
-          {message}
-        </p>
-      )}
-
       <form method="POST" enctype="application/x-www-form-urlencoded" class="mt-8 space-y-5">
         <div>
           <label class="block text-sm font-medium text-slate-700">Email address</label>
           <input
             type="email"
             name="email"
-            placeholder="jane@example.com"
             required
+            placeholder="jane@example.com"
             class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -75,8 +62,8 @@ if (Astro.request.method === "POST") {
           <input
             type="password"
             name="password"
-            placeholder="••••••••"
             required
+            placeholder="••••••••"
             class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -90,7 +77,7 @@ if (Astro.request.method === "POST") {
 
         <p class="text-center text-sm text-slate-500">
           Don’t have an account?
-          <a href="/register" class="text-blue-600 hover:underline">Register</a>
+          <a href="/register" class="text-blue-600 hover:underline"> Register</a>
         </p>
       </form>
     </div>

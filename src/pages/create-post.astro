@@ -1,90 +1,144 @@
 ---
-import MainLayout from "../layouts/MainLayout.astro";
 
-const categories = ["Technology", "Design", "Travel", "Fashion", "Adventure"];
+import MainLayout from "../layouts/MainLayout.astro";
+import { supabase } from "../lib/supabaseClient";
+
+export const prerender = false;
+
+let message = "";
+let error = "";
+
+// session kontrol
+const { data: sessionData } = await supabase.auth.getSession();
+const session = sessionData.session;
+
+if (!session) {
+  return Astro.redirect("/login");
+}
+
+const user = session.user;
+
+if (Astro.request.method === "POST") {
+  try {
+    const formData = await Astro.request.clone().formData();
+
+    const title = formData.get("title")?.toString().trim() ?? "";
+    const category = formData.get("category")?.toString().trim() ?? "";
+    const coverImage = formData.get("cover_image")?.toString().trim() ?? "";
+    const content = formData.get("content")?.toString().trim() ?? "";
+
+    if (!title || !content) {
+      error = "Please fill in title and content.";
+    } else {
+   const { error: insertError } = await supabase.from("posts").insert([
+  {
+    user_id: user.id,
+    title,
+    category: category || null,
+    cover_image: coverImage || null,
+    content,
+    status: "published", 
+    author: user.email, 
+  },
+]);
+
+      if (insertError) {
+        error = insertError.message;
+      } else {
+        // ister account'a dön, ister posts'a dön
+        return Astro.redirect("/account");
+      }
+    }
+  } catch (e) {
+    error = "Something went wrong while creating the post.";
+  }
+}
 ---
 
-<MainLayout title="Create Post | The Modern Journal" fullWidth={false}>
-  <section class="py-14">
+<MainLayout title="Create Post | The Modern Journal" fullWidth={true}>
+  <section class="bg-[#f5f4f0] py-14">
     <div class="max-w-4xl mx-auto px-6">
-
-      <!-- Back Link -->
-      <a href="/account" class="text-sm text-slate-500 hover:text-blue-600 flex items-center gap-2 mb-6">
+      <a href="/account" class="inline-flex items-center gap-2 text-sm text-slate-600 hover:text-blue-600">
         ← Back to Account
       </a>
 
-      <!-- Page Title -->
-      <h1 class="text-4xl font-extrabold text-slate-900">Create New Post</h1>
-      <p class="mt-2 text-slate-500">
-        Share your latest thoughts and ideas with the world.
-      </p>
+      <div class="mt-6 mb-10">
+        <h1 class="text-4xl font-extrabold text-slate-900">Create New Post</h1>
+        <p class="mt-2 text-slate-600 text-lg">Share your latest thoughts and ideas with the world.</p>
+      </div>
 
-      <!-- FORM CARD -->
-      <div class="mt-10 bg-white border border-slate-200 rounded-2xl shadow-sm p-10">
-
-        <!-- Title -->
-        <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-2">POST TITLE</label>
-          <input
-            type="text"
-            placeholder="Enter an engaging title..."
-            class="w-full border border-slate-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
-          />
-        </div>
-
-        <!-- Category + Image -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-
-          <!-- Category -->
-          <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-2">CATEGORY</label>
-            <select
-              class="w-full border border-slate-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
-            >
-              {categories.map((cat) => (
-                <option value={cat}>{cat}</option>
-              ))}
-            </select>
+      <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-10">
+        {error && (
+          <div class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {error}
           </div>
+        )}
 
-          <!-- Cover Image URL -->
+        <form method="POST" class="space-y-6">
           <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-2">COVER IMAGE URL</label>
+            <label class="block text-xs font-semibold tracking-wide text-slate-600 mb-2">POST TITLE</label>
             <input
+              name="title"
               type="text"
-              placeholder="https://..."
-              class="w-full border border-slate-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+              placeholder="Enter an engaging title..."
+              class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
             />
           </div>
-        </div>
 
-        <!-- Content -->
-        <div class="mt-8">
-          <label class="block text-sm font-semibold text-slate-700 mb-2">CONTENT</label>
-          <textarea
-            placeholder="Tell your story here..."
-            class="w-full min-h-[280px] border border-slate-200 rounded-lg px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-600"
-          ></textarea>
+          <div class="grid gap-6 md:grid-cols-2">
+            <div>
+              <label class="block text-xs font-semibold tracking-wide text-slate-600 mb-2">CATEGORY</label>
+              <select
+                name="category"
+                class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="Technology">Technology</option>
+                <option value="Design">Design</option>
+                <option value="Lifestyle">Lifestyle</option>
+                <option value="Travel">Travel</option>
+              </select>
+            </div>
 
-          <p class="mt-2 text-xs text-slate-400">Markdown supported</p>
-        </div>
+            <div>
+              <label class="block text-xs font-semibold tracking-wide text-slate-600 mb-2">COVER IMAGE URL</label>
+              <input
+                name="cover_image"
+                type="url"
+                placeholder="https://..."
+                class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
 
-        <!-- Buttons -->
-        <div class="flex justify-end gap-4 mt-10">
-  <button
-    class="shrink-0 px-7 py-3 rounded-lg border border-slate-200 text-slate-700 font-semibold hover:bg-slate-50 transition"
-  >
-    Save Draft
-  </button>
+          <div>
+            <label class="block text-xs font-semibold tracking-wide text-slate-600 mb-2">CONTENT</label>
+            <textarea
+              name="content"
+              rows="10"
+              placeholder="Tell your story here..."
+              class="w-full rounded-lg border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            ></textarea>
+            <p class="mt-2 text-xs text-slate-500">Markdown supported</p>
+          </div>
 
-  <button
-    class="shrink-0 px-8 py-3 rounded-lg bg-blue-600 text-white font-semibold shadow-md hover:bg-blue-700 active:scale-[0.98] transition flex items-center justify-center"
-  >
-    Publish Post
-  </button>
-</div>
-</div>
-        </div>
+          <div class="flex items-center justify-end gap-3 pt-4">
+            <a
+              href="/account"
+              class="inline-flex items-center justify-center rounded-lg border border-slate-300 px-6 py-3 font-semibold text-slate-800 hover:bg-slate-100 transition"
+            >
+              Cancel
+            </a>
+
+            <button
+              type="submit"
+              class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700 transition shadow"
+            >
+              Publish Post
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </section>
