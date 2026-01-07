@@ -1,8 +1,9 @@
 ---
+export const prerender = false;
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 
-const { title = "The Sumeyye Journal", fullWidth = false } = Astro.props;
+const { title = "The Modern Journal", fullWidth = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -11,7 +12,7 @@ const { title = "The Sumeyye Journal", fullWidth = false } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- ✅ Tailwind + global styles -->
+    <!-- Tailwind + global styles -->
     <link rel="stylesheet" href="/src/styles/global.css" />
 
     <title>{title}</title>

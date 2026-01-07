@@ -38,7 +38,7 @@ As we look forward, the line between static and dynamic continues to blur, offer
 Venice is one of those places where time feels suspended. The sound of water, the reflections on old stone, the little streets that open into quiet squares...
 
 ## Why Venice feels different
-It’s not just about the canals. It’s about the mood. Every bridge creates a new perspective, every alley feels like a hidden secret.
+It is not just about the canals. It’s about the mood. Every bridge creates a new perspective, every alley feels like a hidden secret.
 
 Travel isn’t always about "doing" — sometimes it’s about slowing down and observing.
 `,
@@ -76,12 +76,12 @@ Sometimes modern design feels too "flat." Retro gives depth and personality.
     dateISO: "2025-10-10",
     image: "/Images/climbing.jpg",
     content: `
-Adventure doesn’t always mean danger. Sometimes adventure means discomfort.
+Adventure does not always mean danger. Sometimes adventure means discomfort.
 
 ## Why it matters
 The moment you leave your comfort zone, you grow. Even small progress can reshape your mindset.
 
-It’s not the peak that changes you — it’s the climb.
+It is not the peak that changes you — it is the climb.
 `,
   },
 

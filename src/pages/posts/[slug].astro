@@ -1,4 +1,5 @@
 ---
+export const prerender = false;
 import MainLayout from "../../layouts/MainLayout.astro";
 import { posts } from "../../data/posts";
 
@@ -34,7 +35,7 @@ const comments = [
 ];
 ---
 
-<MainLayout title={`${post.title} | The Sumeyye Journal`} fullWidth={false}>
+<MainLayout title={`${post.title} | The Modern Journal`} fullWidth={false}>
   <section class="py-14 max-w-4xl mx-auto px-6">
 
     <!-- Category -->

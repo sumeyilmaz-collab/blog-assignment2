@@ -1,5 +1,5 @@
 ---
-const isLoggedIn = false; // şimdilik false, sonra auth gelince gerçek olacak
+const isLoggedIn = Astro.cookies.get("loggedIn")?.value === "true";
 ---
 
 <header class="border-b border-slate-200 bg-white/80 backdrop-blur">
@@ -9,7 +9,7 @@ const isLoggedIn = false; // şimdilik false, sonra auth gelince gerçek olacak
       <span class="inline-flex h-8 w-8 items-center justify-center rounded-md bg-blue-600 text-white">
         ✦
       </span>
-      <span>The Sumeyye Journal</span>
+      <span>The Modern Journal</span>
     </a>
 
     {/* Links */}
@@ -18,15 +18,9 @@ const isLoggedIn = false; // şimdilik false, sonra auth gelince gerçek olacak
       <a href="/posts" class="hover:text-blue-600">Posts</a>
 
       {isLoggedIn ? (
-        <>
-          <a href="/account" class="hover:text-blue-600">Profile</a>
-          <a
-            href="/posts/new"
-            class="rounded-md bg-blue-600 px-3 py-2 text-white hover:bg-blue-700"
-          >
-            + New Post
-          </a>
-        </>
+        <a href="/account" class="hover:text-blue-600 font-semibold">
+          Account
+        </a>
       ) : (
         <>
           <a href="/register" class="hover:text-blue-600">Register</a>
