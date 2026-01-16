@@ -8,14 +8,13 @@ import { supabase } from "../../lib/supabaseClient";
 
 const { slug } = Astro.params;
 
-// UUID mi? (DB id gibi)
 const isUuid =
   typeof slug === "string" &&
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(slug);
 
 let post = null;
 
-// 1) Eğer UUID ise DB'den id ile çek
+
 if (isUuid) {
   const { data, error } = await supabase
     .from("posts")
@@ -35,12 +34,10 @@ if (isUuid) {
     };
   }
 } else {
-  // 2) UUID değilse önce seed'de slug ile bul
   const seed = seedPosts.find((p) => p.slug === slug);
   if (seed) {
     post = { ...seed, fromDb: false };
   } else {
-    // 3) Seed'de yoksa DB'de slug kolonu varsa slug ile dene
     const { data, error } = await supabase
       .from("posts")
       .select("*")
@@ -139,4 +136,4 @@ const comments = [
       </div>
     </section>
   </section>
-</MainLayout>
+</MainLayout> 

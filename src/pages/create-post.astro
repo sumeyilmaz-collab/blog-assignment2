@@ -8,7 +8,7 @@ export const prerender = false;
 let message = "";
 let error = "";
 
-// session kontrol
+// session control
 const { data: sessionData } = await supabase.auth.getSession();
 const session = sessionData.session;
 
@@ -45,7 +45,6 @@ if (Astro.request.method === "POST") {
       if (insertError) {
         error = insertError.message;
       } else {
-        // ister account'a dön, ister posts'a dön
         return Astro.redirect("/account");
       }
     }

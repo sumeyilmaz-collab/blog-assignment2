@@ -7,7 +7,7 @@ export const prerender = false;
 
 const categories = ["All", "Adventure", "Travel", "Fashion", "Technology", "Design"];
 
-// Supabase'den published postları çek
+
 const { data: dbPosts, error } = await supabase
   .from("posts")
   .select("*")
@@ -15,8 +15,6 @@ const { data: dbPosts, error } = await supabase
   .order("created_at", { ascending: false });
 
 if (error) console.error("Supabase posts error:", error);
-
-// DB postlarını UI formatına map'le
 const mappedDbPosts = (dbPosts ?? []).map((p) => ({
   id: p.id ?? null,
   slug: p.slug ?? null,
@@ -33,7 +31,7 @@ const mappedDbPosts = (dbPosts ?? []).map((p) => ({
   date: p.created_at ? new Date(p.created_at).toLocaleDateString() : "",
 }));
 
-// Seed + DB birleşsin (DB önce)
+// Seed + DB combined
 const combined = [...mappedDbPosts, ...seedPosts];
 
 // Unique key: DB -> id, Seed -> slug

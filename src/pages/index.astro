@@ -5,7 +5,6 @@ import MainLayout from "../layouts/MainLayout.astro";
 import { posts as seedPosts } from "../data/posts";
 import { supabase } from "../lib/supabaseClient";
 
-// Supabase'den published postları çek (en yeni önce)
 const { data: dbPosts, error } = await supabase
   .from("posts")
   .select("*")
@@ -14,7 +13,6 @@ const { data: dbPosts, error } = await supabase
 
 if (error) console.error("Supabase latest posts error:", error);
 
-// DB postlarını UI formatına map'le
 const mappedDbPosts = (dbPosts ?? []).map((p) => ({
   id: p.id ?? null,
   slug: p.slug ?? null,
@@ -29,26 +27,21 @@ const mappedDbPosts = (dbPosts ?? []).map((p) => ({
     ((p.content ?? "").length > 140 ? "..." : ""),
   author: p.author ?? "You",
   date: p.created_at ? new Date(p.created_at).toLocaleDateString() : "",
-  // sorting için ISO-like:
   createdAt: p.created_at ? new Date(p.created_at).getTime() : 0,
 }));
 
-// Seed postlar için sorting alanı ekle
 const mappedSeedPosts = (seedPosts ?? []).map((p) => ({
   ...p,
   id: null,
   createdAt: p.dateISO ? new Date(p.dateISO).getTime() : 0,
 }));
 
-// Birleştir (DB önce, seed sonra)
 const combined = [...mappedDbPosts, ...mappedSeedPosts];
 
-// Unique key (DB id, seed slug)
 const unique = Array.from(
   new Map(combined.map((p) => [p.id ? `id:${p.id}` : `slug:${p.slug}`, p])).values()
 );
 
-// En güncel 5
 const latestPosts = [...unique].sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0)).slice(0, 5);
 ---
 

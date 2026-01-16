@@ -7,7 +7,7 @@ export const prerender = false;
 let error = "";
 let message = "";
 
-// ✅ Login işlemi
+// Login 
 if (Astro.request.method === "POST") {
   const formData = await Astro.request.clone().formData();
 
